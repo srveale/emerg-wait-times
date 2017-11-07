@@ -35,8 +35,8 @@ const processLogs = () => {
 				// Save the averages to the db
 				const averageLog = new Average();
 				averageLog.averages = {
-					"daily": recentAverages(timeData, "daily"),
-					// "weekly": recentAverages(timeData, "weekly"),
+					// "daily": recentAverages(timeData, "daily"),
+					"weekly": recentAverages(timeData, "weekly"),
 					// "monthly": recentAverages(timeData, "monthly"),
 				}
 				console.log('averageLog.averages', averageLog.averages)

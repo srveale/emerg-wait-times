@@ -11,8 +11,10 @@ const calculateAverages = (timeData, interval) => {
 	console.log('calculating averages', Object.keys(timeData).length)
 	// Find the average time for each 10 minute interval in a day
 
-	const momentInterval = { "daily": "days", "weekly": "weeks", "monthly": "months" }.interval;
+	const momentInterval = { "daily": "days", "weekly": "weeks", "monthly": "months" }[interval];
+	console.log("momentInterval", momentInterval);
 	const start = moment().add(-1, momentInterval);
+	console.log("start", start);
 
 	const timeRange = getTimeRange(interval);
 
@@ -27,7 +29,7 @@ const calculateAverages = (timeData, interval) => {
 		const logs = filterLogs(timeDataDates, start, min, max);
 		console.log("logs", logs.length);
 
-		averageTimes.push(averageTime(logs, timeData).toFixed(0));
+		averageTimes.push(Number(averageTime(logs, timeData).toFixed(0)));
 	})
 	console.log('averageTimes', averageTimes.length)
 	return averageTimes;
@@ -43,16 +45,28 @@ const getTimeRange = (interval) => {
 
 const getIncrement = (timeRange, interval, start, ind) => {
 	// Return [min, max] times for the current increment
-	// const [ minutesFromStartMin, minutesFromStartMax ] = [ timeRange[ind - 1], timeRange[ind + 1]];
-	return [ timeRange[ind - 1], timeRange[ind + 1]];
+	const [ minutesFromStartMin, minutesFromStartMax ] = [ timeRange[ind - 1], timeRange[ind + 1]];
+	const [min, max] = [moment(start).add(minutesFromStartMin, 'minutes'), moment(start).add(minutesFromStartMax, 'minutes')];
+	// return [ timeRange[ind - 1], timeRange[ind + 1]];
+	return [min, max]
 }
 
 const filterLogs = (timeDataDates, start, min, max) => {
 	// Each entry in timeData has format {Date: waitTime}
 	// Allow if (diff start and Date) is btwn (diff start and min) and (diff start and max)
-	return timeDataDates.filter(logTime => {
-		startDateDiff = moment(start).diff(logTime, 'minutes');
-		return startDateDiff > min && startDateDiff < max;
+	const minDiff = min.diff(start, 'minutes');
+	console.log("minDiff", minDiff);
+	const maxDiff = max.diff(start, 'minutes');
+	return timeDataDates.filter((logTime, i) => {
+		// if (i ===0) console.log("logTime", logTime);
+		const startDateDiff = moment(start).diff(logTime, 'minutes');
+		// console.log("startDateDiff", startDateDiff);
+		// if (startDateDiff < 100) console.log('HEERERERHHERHER, startDateDiff ------------------------------------------')
+		// if (minDiff < 100) console.log('HEERERERHHERHER, minDiff, ------------------------------------------')
+		// if (maxDiff < 100) console.log('HEERERERHHERHER, maxDiff, ------------------------------------------')
+
+		// if (i ===0) console.log('startDateDiff, min, max', startDateDiff, minDiff, maxDiff)
+		return startDateDiff >= minDiff && startDateDiff <= maxDiff;
 	})
 }
 
