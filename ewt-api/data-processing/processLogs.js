@@ -20,18 +20,16 @@ const processLogs = () => {
 		// Loop through each hospital and find its logs
 		return Promise.all(HOSPITALS.splice(0,1).map(hospital => {
 			console.log('starting hospital', hospital)
-			Log.find({ "name" : hospital })
+			Log.find({})
 			.then(logs => {
 
 				// Create a timeData object to be fed to recentAverages
-				console.log('found logs', logs.length)
 				const timeData = {};
 				logs.map((log, i) => {
 					const [hours, minutes] = log.waitTime.split(':');
 					const totalTime = Number(hours) * 60 + Number(minutes);
 					timeData[log.currentDate.toString()] = totalTime;
 				})
-				console.log('timeData after map', Object.keys(timeData).length)
 				// Save the averages to the db
 				const averageLog = new Average();
 				averageLog.averages = {

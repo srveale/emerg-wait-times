@@ -13,27 +13,25 @@
 const moment = require('moment')
 
 const calculateAverages = (timeData, interval) => {
-	console.log('calculating averages', Object.keys(timeData).length)
 	// Find the average time for each 10 minute interval in a day
 
+	// Get most recent start of inteverval
 	const momentInterval = { "daily": "day", "weekly": "week", "monthly": "month" }[interval];
-	// Need startTimes to be periodic, instead of just one start time.
-	// const start = moment().add(-1, momentInterval);
 	const start = moment().startOf(momentInterval)
 	console.log("start", start);
 
+	// Get array of increments
 	const timeRange = getTimeRange(interval);
 
 	const averageTimes = [];
 	const timeDataDates = Object.keys(timeData);
+	// Loop over timeData to populate averages
 	timeRange.map((minute, ind) => {
-		if (minute === 0) return; // Will need to handle wrapping of border cases
+		// if (minute === 0) return; 
+		// TODO: handle wrapping of border cases
 
 		const [min, max] = getIncrement(timeRange, interval, start, ind);
-		console.log("min, max", min, max);
-
 		const logs = filterLogs(timeDataDates, start, min, max, momentInterval);
-		console.log("logs", logs.length);
 
 		averageTimes.push(Number(averageTime(logs, timeData).toFixed(0)));
 	})
@@ -51,23 +49,29 @@ const getTimeRange = (interval) => {
 
 const getIncrement = (timeRange, interval, start, ind) => {
 	// Return [min, max] times for the current increment
-	const [ minutesFromStartMin, minutesFromStartMax ] = [ timeRange[ind - 1], timeRange[ind + 1]];
+
+	// Handle first element. timeRange[1] is a proxy for the size of an increment 
+	if (ind === 0) {
+		const [ minutesFromStartMin, minutesFromStartMax ] = [ -timeRange[1], timeRange[ind + 1]];
+	} else if (ind === timeRange.length - 1 ) {
+		const [ minutesFromStartMin, minutesFromStartMax ] = [ timeRange[ind - 1], timeRange[ind] + timeRange];
+	} else {
+		const [ minutesFromStartMin, minutesFromStartMax ] = [ timeRange[ind - 1], timeRange[ind + 1]];
+	}
 	const [min, max] = [moment(start).add(minutesFromStartMin, 'minutes'), moment(start).add(minutesFromStartMax, 'minutes')];
 	// return [ timeRange[ind - 1], timeRange[ind + 1]];
 	return [min, max]
 }
 
 const filterLogs = (timeDataDates, start, min, max, momentInterval) => {
-    console.log("momentInterval", momentInterval);
 	// Each entry in timeData has format {Date: waitTime}
 	// Allow if (diff start and Date) is btwn (diff start and min) and (diff start and max)
+	// Where start is periodic - the beginning of each interval
 	const minDiff = min.diff(start, 'minutes');
 	const maxDiff = max.diff(start, 'minutes');
-	return timeDataDates.filter((logTime, i) => {
-		// const startDiff = moment(logTime).startOf(momentInterval).diff(moment(logTime), 'minutes');
-		const startDiff = moment(logTime).diff(moment(logTime).startOf(momentInterval), 'minutes')
-		// console.log("startDiff", startDiff);
 
+	return timeDataDates.filter((logTime, i) => {
+		const startDiff = moment(logTime).diff(moment(logTime).startOf(momentInterval), 'minutes');
 		return startDiff >= minDiff && startDiff <= maxDiff;
 	})
 }
