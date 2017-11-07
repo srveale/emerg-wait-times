@@ -2,6 +2,11 @@
 // Increments: daily - 10 minutes, weekly - 1 hour, monthly - 1 day
 // Cut up the interval into increments, and for each increment, find all the logs in that increment
 // Eg a weekly 1 hr increment on Mon from 4-5am
+
+// TODO: Find ALL logs in increment, instead of the logs from that most recent increment
+// Ie, EVERY Mon from 4-5am, instead of LAST Mon from 4-5am
+// Going to have to do an overall change, using moment.startOf('day') for example
+
 // Average the wait time for each of those logs, and return [{"increment name" : average}, ...]
 // Where increment name is the number of minutes since the start of the day, week, or month
 // Expecting timeData in format {Date: waitTime}
@@ -11,9 +16,10 @@ const calculateAverages = (timeData, interval) => {
 	console.log('calculating averages', Object.keys(timeData).length)
 	// Find the average time for each 10 minute interval in a day
 
-	const momentInterval = { "daily": "days", "weekly": "weeks", "monthly": "months" }[interval];
-	console.log("momentInterval", momentInterval);
-	const start = moment().add(-1, momentInterval);
+	const momentInterval = { "daily": "day", "weekly": "week", "monthly": "month" }[interval];
+	// Need startTimes to be periodic, instead of just one start time.
+	// const start = moment().add(-1, momentInterval);
+	const start = moment().startOf(momentInterval)
 	console.log("start", start);
 
 	const timeRange = getTimeRange(interval);
@@ -26,7 +32,7 @@ const calculateAverages = (timeData, interval) => {
 		const [min, max] = getIncrement(timeRange, interval, start, ind);
 		console.log("min, max", min, max);
 
-		const logs = filterLogs(timeDataDates, start, min, max);
+		const logs = filterLogs(timeDataDates, start, min, max, momentInterval);
 		console.log("logs", logs.length);
 
 		averageTimes.push(Number(averageTime(logs, timeData).toFixed(0)));
@@ -51,22 +57,18 @@ const getIncrement = (timeRange, interval, start, ind) => {
 	return [min, max]
 }
 
-const filterLogs = (timeDataDates, start, min, max) => {
+const filterLogs = (timeDataDates, start, min, max, momentInterval) => {
+    console.log("momentInterval", momentInterval);
 	// Each entry in timeData has format {Date: waitTime}
 	// Allow if (diff start and Date) is btwn (diff start and min) and (diff start and max)
 	const minDiff = min.diff(start, 'minutes');
-	console.log("minDiff", minDiff);
 	const maxDiff = max.diff(start, 'minutes');
 	return timeDataDates.filter((logTime, i) => {
-		// if (i ===0) console.log("logTime", logTime);
-		const startDateDiff = moment(start).diff(logTime, 'minutes');
-		// console.log("startDateDiff", startDateDiff);
-		// if (startDateDiff < 100) console.log('HEERERERHHERHER, startDateDiff ------------------------------------------')
-		// if (minDiff < 100) console.log('HEERERERHHERHER, minDiff, ------------------------------------------')
-		// if (maxDiff < 100) console.log('HEERERERHHERHER, maxDiff, ------------------------------------------')
+		// const startDiff = moment(logTime).startOf(momentInterval).diff(moment(logTime), 'minutes');
+		const startDiff = moment(logTime).diff(moment(logTime).startOf(momentInterval), 'minutes')
+		// console.log("startDiff", startDiff);
 
-		// if (i ===0) console.log('startDateDiff, min, max', startDateDiff, minDiff, maxDiff)
-		return startDateDiff >= minDiff && startDateDiff <= maxDiff;
+		return startDiff >= minDiff && startDiff <= maxDiff;
 	})
 }
 
