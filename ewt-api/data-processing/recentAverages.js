@@ -54,7 +54,7 @@ const getIncrement = (timeRange, interval, start, ind) => {
 	if (ind === 0) {
 		const [ minutesFromStartMin, minutesFromStartMax ] = [ -timeRange[1], timeRange[ind + 1]];
 	} else if (ind === timeRange.length - 1 ) {
-		const [ minutesFromStartMin, minutesFromStartMax ] = [ timeRange[ind - 1], timeRange[ind] + timeRange];
+		const [ minutesFromStartMin, minutesFromStartMax ] = [ timeRange[ind - 1], timeRange[ind] + timeRange[1]];
 	} else {
 		const [ minutesFromStartMin, minutesFromStartMax ] = [ timeRange[ind - 1], timeRange[ind + 1]];
 	}
