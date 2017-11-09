@@ -6,16 +6,17 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const config = require('./config');
+
+// Connect to database
+mongoose.connect(config.database.url, { useMongoClient: true });
+const db = mongoose.connection;
+
 const index = require('./routes/index');
 const users = require('./routes/users');
 const hospital = require('./routes/hospital');
 
-const config = require('./config');
-
 const app = express();
-
-// Connect to database
-mongoose.connect(config.database.url, {}, (err) => console.error(err))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
