@@ -1,12 +1,35 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const moment = require('moment');
+const router = express.Router();
+
+const Log = require('../db/logSchema');
+const Average = require('../db/averageSchema');
 
 /* GET users listing. */
 router.get('/:hospital/', function(req, res, next) {
-	console.log('got to hospital route');
-	console.log('db', db)
+	const hospital = req.params.hospital
+	// Find recent logs
+	Log.find({ 
+		"name": hospital,
+		"currentDate": {"$gte": moment().add(-30, 'days').toDate()
+	}})
+	.then((logs) => {
+		console.log('found logs', logs.length)
+		console.log('hospital for average find', hospital);
+		// Find Averages
+		Average.findOne(
+			{ "name": hospital }
+			// { sort: { 'dateGenerated' : -1 }}
+		)
+		.then((average) => {
+			console.log('found average', average)
+  			res.send('respond with a resource');
+		})
+		.catch((error) => console.log('error getting average', error))
+		console.log('found the average')
+	})
+	.catch((error) => console.log('error in logs find', error))
 	// Respond with the most recent timeRange days data (one, seven, or thirty), and the average over the past timeRange days
-  	res.send('respond with a resource');
 });
 
 module.exports = router;

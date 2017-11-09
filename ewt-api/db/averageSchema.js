@@ -8,4 +8,4 @@ const averageSchema = new Schema({
 });
 
 const Average = mongoose.model('Average', averageSchema);
-module.exports = { Average };
+module.exports = Average;
