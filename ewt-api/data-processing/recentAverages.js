@@ -27,14 +27,11 @@ const calculateAverages = (timeData, interval) => {
 	const timeDataDates = Object.keys(timeData);
 	// Loop over timeData to populate averages
 	timeRange.map((minute, ind) => {
-		console.log('mapping minute', minute)
 		// if (minute === 0) return; 
 		// TODO: handle wrapping of border cases
 
 		const [min, max] = getIncrement(timeRange, interval, start, ind);
-		console.log("[min, max]", [min, max]);
 		const logs = filterLogs(timeDataDates, start, min, max, momentInterval);
-		console.log('logs', logs.length)
 
 		averageTimes.push(Number(averageTime(logs, timeData).toFixed(0)));
 	})
@@ -51,32 +48,26 @@ const getTimeRange = (interval) => {
 }
 
 const getIncrement = (timeRange, interval, start, ind) => {
-	console.log('getting increment', timeRange.length, interval, start, ind)
 	// Return [min, max] times for the current increment
 
 	let minutesFromStartMin, minutesFromStartMax;
 	// Handle first element. timeRange[1] is a proxy for the size of an increment
 	if (ind === 0) {
-		console.log('first element')
 		minutesFromStartMin = timeRange[timeRange.length -1] - timeRange[1];
 		minutesFromStartMax = timeRange[1];
 	}
 	// Handle the last element. (Is this the same interval as the first element? need coffee and a whiteboard)
 	else if (ind === timeRange.length - 1 ) {
-		console.log('last element');
 		minutesFromStartMin = timeRange[timeRange.length -1] - timeRange[1];
 		minutesFromStartMax = timeRange[1];
 	} 
 	// Handle every other element
 	else {
-		console.log('not first or last element')
 		minutesFromStartMin = timeRange[ind - 1];
 		minutesFromStartMax = timeRange[ind + 1];
 	}
-	console.log('after if stuff')
 	const [min, max] = [moment(start).add(minutesFromStartMin, 'minutes'), moment(start).add(minutesFromStartMax, 'minutes')];
 	// return [ timeRange[ind - 1], timeRange[ind + 1]];
-	console.log('returning increment', [min, max])
 	return [min, max]
 }
 
@@ -84,14 +75,12 @@ const filterLogs = (timeDataDates, start, min, max, momentInterval) => {
 	// Each entry in timeData has format {Date: waitTime}
 	// Allow if (diff start and Date) is btwn (diff start and min) and (diff start and max)
 	// Where start is periodic - the beginning of each interval
-	console.log('filtering logs')
 	const minDiff = min.diff(start, 'minutes');
 	// console.log("minDiff", minDiff);
 	const maxDiff = max.diff(start, 'minutes');
 	// console.log("maxDiff", maxDiff);
 
-
-	const returnValue = timeDataDates.filter((logTime, i) => {
+	return timeDataDates.filter((logTime, i) => {
 		// console.log('starting filter', logTime)
 		const startDiff = moment(logTime).diff(moment(logTime).startOf(momentInterval), 'minutes');
 
@@ -106,9 +95,6 @@ const filterLogs = (timeDataDates, start, min, max, momentInterval) => {
 
 		return startDiff >= minDiff && startDiff <= maxDiff;
 	})
-	console.log('returnValue.length', returnValue.length)
-	return returnValue;
-	console.log('doing something after the return')
 }
 
 const averageTime = (dates, timeData) => {

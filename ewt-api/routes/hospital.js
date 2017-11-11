@@ -14,8 +14,6 @@ router.get('/:hospital/', function(req, res, next) {
 		"currentDate": {"$gte": moment().add(-30, 'days').toDate()
 	}})
 	.then((logs) => {
-		console.log('found logs', logs.length)
-		console.log('hospital for average find', hospital);
 		// Find Averages
 		Average.find(
 			{ "name": hospital }
@@ -30,7 +28,6 @@ router.get('/:hospital/', function(req, res, next) {
   			});
 		})
 		.catch((error) => console.log('error getting average', error))
-		console.log('found the average')
 	})
 	.catch((error) => console.log('error in logs find', error))
 	// Respond with the most recent timeRange days data (one, seven, or thirty), and the average over the past timeRange days
