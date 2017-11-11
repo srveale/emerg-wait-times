@@ -17,13 +17,17 @@ router.get('/:hospital/', function(req, res, next) {
 		console.log('found logs', logs.length)
 		console.log('hospital for average find', hospital);
 		// Find Averages
-		Average.findOne(
+		Average.find(
 			{ "name": hospital }
-			// { sort: { 'dateGenerated' : -1 }}
-		)
+		).sort({"dateGenerated": -1})
+		.limit(1)
 		.then((average) => {
 			console.log('found average', average)
-  			res.send('respond with a resource');
+  			res.send({
+  				hospital,
+  				logs,
+  				average
+  			});
 		})
 		.catch((error) => console.log('error getting average', error))
 		console.log('found the average')
