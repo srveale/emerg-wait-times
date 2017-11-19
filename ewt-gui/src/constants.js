@@ -1,0 +1,23 @@
+module.exports = {
+	HOSPITALS: [
+		{long: "Alberta Children's Hospital", short: "Alberta Children's"},
+		{long: "Medicine Hat Regional Hospital", short: "Medicine Hat Regional"},
+		{long: "Red Deer Regional Hospital", short: "Red Deer Regional"},
+		{long: "Chinook Regional Hospital", short: "Chinook Regional"},
+		{long: "Foothills Medical Centre", short: "Foothills Medical"},
+		{long: "Peter Lougheed Centre", short: "Peter Lougheed"},
+		{long: "Rockyview General Hospital", short: "Rockyview General"},
+		{long: "South Health Campus", short: "South Health Campus"},
+		{long: "Fort Sask Community Hospital", short: "Fort Sask Community"},
+		{long: "Grey Nuns Community Hospital", short: "Grey Nuns Community"},
+		{long: "Leduc Community Hospital", short: "Leduc Community"},
+		{long: "Misericordia Community Hospital", short: "Misericordia Community"},
+		{long: "Northeast Community Health Centre", short: "Northeast Community Health"},
+		{long: "Royal Alexandra Hospital", short: "Royal Alexandra"},
+		{long: "Stollery Children's Hospital", short: "Stollery Children's"},
+		{long: "Strathcona Community Hospital ", short: "Strathcona Community"},
+		{long: "Sturgeon Community Hospital", short: "Sturgeon Community"},
+		{long: "University of Alberta Hospital", short: "University of Alberta"},
+		{long: "WestView Health Centre",	 short: "WestView Health"},
+	],
+}
