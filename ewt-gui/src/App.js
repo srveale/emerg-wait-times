@@ -23,7 +23,8 @@ class App extends Component {
     console.log('fetching hospital data')
     axios.get(`/hospital/${encodeURI(hospital)}`)
       .then(response => {
-        console.log('response')
+        // this.setState(hospitalData: )
+        console.log('response', response.data)
       })
   }
 
