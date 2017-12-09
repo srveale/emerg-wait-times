@@ -21,7 +21,9 @@ export default class App extends Component {
 
   componentDidUpdate(prevProps, prevState){
     console.log('this.state.hospitalData', this.state.hospitalData)
-    const data = this.state.hospitalData;
+    const data = this.state.hospitalData.average[0].averages[0].weekly.map((ave, i) => {
+      return { index: i, value: ave };
+    });
 
     if (this.state.firstRender) {
       const svg = d3.select("svg"),
@@ -30,8 +32,6 @@ export default class App extends Component {
           height = +svg.attr("height") - margin.top - margin.bottom,
           g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      const parseTime = d3.timeParse("%d-%b-%y");
-
       const x = d3.scaleTime()
           .rangeRound([0, width]);
 
@@ -39,11 +39,11 @@ export default class App extends Component {
           .rangeRound([height, 0]);
 
       const line = d3.line()
-          .x(function(d) { return x(d.date); })
-          .y(function(d) { return y(d.close); });
+          .x(d => x(d.index))
+          .y(d => y(d.value));
 
-      x.domain(d3.extent(data, function(d) { return d.date; }));
-      y.domain(d3.extent(data, function(d) { return d.close; }));
+      x.domain(d3.extent(data, d => d.index));
+      y.domain(d3.extent(data, d => d.value));
 
       g.append("g")
           .attr("transform", "translate(0," + height + ")")
@@ -59,7 +59,7 @@ export default class App extends Component {
           .attr("y", 6)
           .attr("dy", "0.71em")
           .attr("text-anchor", "end")
-          .text("Price ($)");
+          .text("Wait Time (min)");
 
       g.append("path")
           .datum(data)

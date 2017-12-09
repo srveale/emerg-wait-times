@@ -5,10 +5,12 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const _ = require('lodash');
 
-const { Log } = require('../db/logSchema');
-const { Average } = require('../db/averageSchema')
+const Log = require('../db/logSchema');
+const Average = require('../db/averageSchema')
 const { HOSPITALS } = require('../constants');
 const recentAverages = require('./recentAverages');
+
+
 
 const processLogs = () => {
 	console.log('processing logs');
@@ -18,9 +20,9 @@ const processLogs = () => {
 		console.log('Looping through hospital promises')
 
 		// Loop through each hospital and find its logs
-		return Promise.all(HOSPITALS.splice(0,1).map(hospital => {
+		return Promise.all(HOSPITALS.splice(3,1).map(hospital => {
 			console.log('starting hospital', hospital)
-			Log.find({})
+			Log.find({ name: hospital})
 			.then(logs => {
 
 				// Create a timeData object to be fed to recentAverages
@@ -33,9 +35,9 @@ const processLogs = () => {
 				// Save the averages to the db
 				const averageLog = new Average();
 				averageLog.averages = {
-					// "daily": recentAverages(timeData, "daily"),
+					"daily": recentAverages(timeData, "daily"),
 					"weekly": recentAverages(timeData, "weekly"),
-					// "monthly": recentAverages(timeData, "monthly"),
+					"monthly": recentAverages(timeData, "monthly"),
 				}
 				console.log('averageLog.averages', averageLog.averages)
 				averageLog.dateGenerated = new Date();
