@@ -3,10 +3,6 @@
 // Cut up the interval into increments, and for each increment, find all the logs in that increment
 // Eg a weekly 1 hr increment on Mon from 4-5am
 
-// TODO: Find ALL logs in increment, instead of the logs from that most recent increment
-// Ie, EVERY Mon from 4-5am, instead of LAST Mon from 4-5am
-// Going to have to do an overall change, using moment.startOf('day') for example
-
 // Average the wait time for each of those logs, and return [{"increment name" : average}, ...]
 // Where increment name is the number of minutes since the start of the day, week, or month
 // Expecting timeData in format {Date: waitTime}
@@ -27,8 +23,6 @@ const calculateAverages = (timeData, interval) => {
 	const timeDataDates = Object.keys(timeData);
 	// Loop over timeData to populate averages
 	timeRange.map((minute, ind) => {
-		// if (minute === 0) return; 
-		// TODO: handle wrapping of border cases
 
 		const [min, max] = getIncrement(timeRange, interval, start, ind);
 		const logs = filterLogs(timeDataDates, start, min, max, momentInterval);

@@ -62,9 +62,7 @@ class App extends Component {
     const heatmapChart = function(data) {
       console.log('running heat map chart', data)
       const colorScale = d3.scaleQuantile()
-          // .domain([40, 50, 60, 70, 80, 90, 100, 120])
           .domain([0, buckets - 1, d3.max(data,  (d) => d.value)])
-          // .domain([0, 1, 10, 100, 1000, 10000, 100000, 1000000])
           .range(colors);
 
       console.log('colourscale', colorScale)

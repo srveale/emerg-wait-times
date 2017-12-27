@@ -12,7 +12,7 @@ const recentAverages = require('./recentAverages');
 
 
 
-const processLogs = () => {
+const processLogs = (i) => {
 	console.log('processing logs');
 
 	mongoose.connect('mongodb://localhost/ewt')
@@ -20,7 +20,7 @@ const processLogs = () => {
 		console.log('Looping through hospital promises')
 
 		// Loop through each hospital and find its logs
-		return Promise.all(HOSPITALS.splice(3,1).map(hospital => {
+		return Promise.all(HOSPITALS.splice(i,1).map(hospital => {
 			console.log('starting hospital', hospital)
 			Log.find({ name: hospital})
 			.then(logs => {
@@ -51,7 +51,6 @@ const processLogs = () => {
 	})
 	.catch((err) => console.error("Mongoose error", err))
 }
-
-processLogs();
+processLogs(1)
 
 module.exports = processLogs;

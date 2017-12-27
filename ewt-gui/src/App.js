@@ -36,7 +36,7 @@ class App extends Component {
           <h1 className="App-title">Alberta Emergency Room Wait Times</h1>
           <HospitalTabs fetchHospitalData={this._fetchHospitalData}/>
         </header>
-        {/*<LineGraph hospitalData={this.state.hospitalData}/>*/}
+        <LineGraph hospitalData={this.state.hospitalData}/>
         <HeatMap hospitalData={this.state.hospitalData}/>
       </div>
     );

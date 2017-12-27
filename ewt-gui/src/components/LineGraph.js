@@ -21,7 +21,7 @@ export default class App extends Component {
 
   componentDidUpdate(prevProps, prevState){
     console.log('this.state.hospitalData', this.state.hospitalData)
-    const data = this.state.hospitalData.average[0].averages[0].weekly.map((ave, i) => {
+    const data = this.state.hospitalData.average[0].averages[0].daily.map((ave, i) => {
       return { index: i, value: ave };
     });
 
