@@ -60,13 +60,9 @@ class App extends Component {
           .attr("class", (d, i) => ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"));
 
     const heatmapChart = function(data) {
-      console.log('running heat map chart', data)
       const colorScale = d3.scaleQuantile()
-          .domain([0, buckets - 1, d3.max(data,  (d) => d.value)])
+          .domain([60, buckets - 1, d3.max(data,  (d) => d.value)])
           .range(colors);
-
-      console.log('colourscale', colorScale)
-      console.log('colorScale(50)', colorScale(50))
 
       const cards = svg.selectAll(".hour")
           .data(data, (d) => d.day+':'+d.hour);
@@ -81,7 +77,7 @@ class App extends Component {
           .attr("class", "hour bordered")
           .attr("width", gridSize)
           .attr("height", gridSize)
-          .style("fill", d=> colorScale(d.value));
+          .style("fill", d => colorScale(d.value));
 
       cards.transition().duration(1000)
           .style("fill", d => {

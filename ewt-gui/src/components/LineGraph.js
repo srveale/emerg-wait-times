@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as d3 from "d3";
+import moment from 'moment';
 
 export default class App extends Component {
   constructor (props) {
@@ -21,8 +22,12 @@ export default class App extends Component {
 
   componentDidUpdate(prevProps, prevState){
     console.log('this.state.hospitalData', this.state.hospitalData)
+    const secondsPerInterval = 86400 / this.state.hospitalData.average[0].averages[0].daily.length;
     const data = this.state.hospitalData.average[0].averages[0].daily.map((ave, i) => {
-      return { index: i, value: ave };
+      const secondsFromStart = i * secondsPerInterval;
+      const timeFromStart = moment(0).startOf('day').add(secondsFromStart, 'seconds');
+      if (i === 0) console.log('secondsFromStart', secondsFromStart, 'timeFromStart', timeFromStart)
+      return { index: i, value: ave, timeFromStart: timeFromStart.toDate() };
     });
 
     if (this.state.firstRender) {
@@ -33,17 +38,18 @@ export default class App extends Component {
           g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       const x = d3.scaleTime()
+          .domain([data[1].timeFromStart, data[data.length-1].timeFromStart])
           .rangeRound([0, width]);
 
       const y = d3.scaleLinear()
           .rangeRound([height, 0]);
 
       const line = d3.line()
-          .x(d => x(d.index))
+          .x(d => x(d.timeFromStart))
           .y(d => y(d.value));
 
-      x.domain(d3.extent(data, d => d.index));
-      y.domain(d3.extent(data, d => d.value));
+      // x.domain(d3.extent(data, d => d.timeFromStart));
+      y.domain([30, 200]);
 
       g.append("g")
           .attr("transform", "translate(0," + height + ")")

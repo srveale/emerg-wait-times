@@ -29,6 +29,10 @@ class App extends Component {
       })
   }
 
+  componentWillMount () {
+    this._fetchHospitalData('aggregate');
+  }
+
   render() {
     return (
       <div className="App">
@@ -36,6 +40,7 @@ class App extends Component {
           <h1 className="App-title">Alberta Emergency Room Wait Times</h1>
           <HospitalTabs fetchHospitalData={this._fetchHospitalData}/>
         </header>
+        <h2> Average wait times across Alberta </h2>
         <LineGraph hospitalData={this.state.hospitalData}/>
         <HeatMap hospitalData={this.state.hospitalData}/>
       </div>
