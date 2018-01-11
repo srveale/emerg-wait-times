@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import HospitalTabs from './components/HospitalTabs';
+import HospitalSelect from './components/HospitalSelect';
 import LineGraph from './components/LineGraph';
 import HeatMap from './components/HeatMap';
 import './App.css';
@@ -22,9 +23,9 @@ class App extends Component {
   }
 
   _fetchHospitalData (hospital) {
+    console.log('hospital in fetch', hospital)
     axios.get(`/hospital/${encodeURI(hospital)}`)
       .then(response => {
-        console.log('response', response.data)
         this.setState({ hospitalData: response.data })
       })
   }
@@ -36,12 +37,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header"> 
-          <h1 className="App-title">Alberta Emergency Room Wait Times</h1>
-          <HospitalTabs fetchHospitalData={this._fetchHospitalData}/>
-        </header>
         <h2> Average wait times across Alberta </h2>
         <LineGraph hospitalData={this.state.hospitalData}/>
+        <HospitalSelect fetchHospitalData={this._fetchHospitalData}/>
+        <h3>Hourly breakdown</h3>
         <HeatMap hospitalData={this.state.hospitalData}/>
       </div>
     );

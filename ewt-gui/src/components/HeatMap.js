@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import '../App.css';
 import * as d3 from "d3";
 
-class App extends Component {
+class HeatMap extends Component {
   constructor (props) {
     super(props)
     this.state = {
         firstRender: true,
     }
+
+    this.renderFirst = this.renderFirst.bind(this);
+    this.subsequentRender = this.subsequentRender.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -19,6 +22,25 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.state.firstRender) {
+      this.renderFirst();
+    } else {
+      this.subsequentRender();
+    }
+  }
+
+  subsequentRender() {
+    console.log('subsequentRender')
+    const data = this.state.hospitalData.average[0].averages[0].weekly.map((ave, i) => {
+      return { day: Math.floor(i / 24) + 1, hour: i % 24 + 1, value: ave };
+    });
+    const svg = d3.select("#heatmap")
+    const cards = svg.selectAll(".hour")
+        .data(data, (d) => d.day+':'+d.hour);
+
+  }
+
+  renderFirst() {
     const margin = { top: 50, right: 0, bottom: 100, left: 30 },
         width = 960 - margin.left - margin.right,
         height = 430 - margin.top - margin.bottom,
@@ -93,16 +115,16 @@ class App extends Component {
           .data([0].concat(colorScale.quantiles()), d => d);
 
       legend.enter().append("g")
-          .attr("class", "legend");
+          .attr("class", "legendElement");
 
-      legend.append("rect")
+      d3.selectAll(".legendElement").append("rect")
         .attr("x", (d, i) => legendElementWidth * i)
         .attr("y", height)
         .attr("width", legendElementWidth)
         .attr("height", gridSize / 2)
         .style("fill", (d, i) => colors[i]);
 
-      legend.append("text")
+      d3.selectAll(".legendElement").append("text")
         .attr("className", "mono")
         .text(d => "≥ " + Math.round(d))
         .attr("x", (d, i) => legendElementWidth * i)
@@ -123,4 +145,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default HeatMap;

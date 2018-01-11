@@ -26,7 +26,6 @@ export default class App extends Component {
     const data = this.state.hospitalData.average[0].averages[0].daily.map((ave, i) => {
       const secondsFromStart = i * secondsPerInterval;
       const timeFromStart = moment(0).startOf('day').add(secondsFromStart, 'seconds');
-      if (i === 0) console.log('secondsFromStart', secondsFromStart, 'timeFromStart', timeFromStart)
       return { index: i, value: ave, timeFromStart: timeFromStart.toDate() };
     });
 
