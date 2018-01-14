@@ -1,3 +1,3 @@
 module.exports = {
-	API_PATH: "localhost:3010/",
+	API_PATH: "localhost:3003/",
 }
