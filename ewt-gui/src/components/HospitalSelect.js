@@ -10,8 +10,9 @@ class HospitalSelect extends Component {
   }
   render() {
     return (
-      <div className="hospital-tabs">
-        <select onChange={(e) => this.props.fetchHospitalData(e.target.value)}>
+      <div className="hospital-select">
+        <label htmlFor="#mainselection">Select a hospital: </label>
+        <select id="mainselection" onChange={(e) => this.props.fetchHospitalData(e.target.value)}>
           {HOSPITALS.map(hospital => {
             return (
               <option

@@ -38,9 +38,11 @@ class App extends Component {
     const currentHospital = this.state.hospitalData.hospital;
     return (
       <div className="App">
-        <h2> Average wait times {currentHospital !== 'aggregate' ? `for ${currentHospital}`: 'across Alberta'} </h2>
-        <LineGraph hospitalData={this.state.hospitalData}/>
+        <h1>Alberta Emergency Room Wait Times</h1>
+        <p></p>
+        <h2>Average wait times {currentHospital !== 'aggregate' ? `for ${currentHospital}`: 'across Alberta'}</h2>
         <HospitalSelect fetchHospitalData={this._fetchHospitalData}/>
+        <LineGraph hospitalData={this.state.hospitalData}/>
         <h3>Hourly breakdown</h3>
         <HeatMap hospitalData={this.state.hospitalData}/>
       </div>
