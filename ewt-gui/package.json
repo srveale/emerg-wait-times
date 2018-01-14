@@ -16,5 +16,15 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
+  "apps": [
+    {
+      "name": "EMERGENCY-WAIT-TIMES",
+      "script": "./serve.js",
+      "args": "",
+      "env": {
+        "PORT": "3002"
+      }
+    }
+  ],
   "proxy": "http://localhost:3003"
 }

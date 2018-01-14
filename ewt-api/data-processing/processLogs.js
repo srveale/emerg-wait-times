@@ -51,6 +51,6 @@ const processLogs = (i) => {
 	})
 	.catch((err) => console.error("Mongoose error", err))
 }
-processLogs(1)
+processLogs(0)
 
 module.exports = processLogs;
