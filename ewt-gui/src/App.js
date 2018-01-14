@@ -47,7 +47,7 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Alberta Emergency Room Wait Times</h1>
         </header>
-        <h2>Wait times {isAggregate ? `for ${currentHospital}`: 'across the region'}</h2>
+        <h2>Wait times {!isAggregate ? `for ${currentHospital}`: 'across the region'}</h2>
         <HospitalSelect fetchHospitalData={this._fetchHospitalData}/>
         {!isAggregate && <p>Current wait time: {hospitalData.logs[hospitalData.logs.length - 1].waitTime}</p>}
         <LineGraph hospitalData={this.state.hospitalData}/>
