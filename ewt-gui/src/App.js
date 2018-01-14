@@ -13,7 +13,7 @@ class App extends Component {
     super(props);
     this.state = {
       hospitalData: {
-        hospital: {},
+        hospital: 'aggregate',
         logs: {},
         average: {},
       }
@@ -23,9 +23,9 @@ class App extends Component {
   }
 
   _fetchHospitalData (hospital) {
-    console.log('hospital in fetch', hospital)
     axios.get(`/hospital/${encodeURI(hospital)}`)
       .then(response => {
+        console.log('hospital in fetch', response.data)
         this.setState({ hospitalData: response.data })
       })
   }
@@ -35,15 +35,23 @@ class App extends Component {
   }
 
   render() {
-    const currentHospital = this.state.hospitalData.hospital;
+    const { hospitalData } = this.state;
+    const currentHospital = hospitalData.hospital;
+    const isAggregate = currentHospital === 'aggregate';
+    console.log('hospitalData', hospitalData)
+    
+    console.log('currentHospital', currentHospital)
+    console.log('isAggregate', isAggregate)
     return (
       <div className="App">
-        <h1>Alberta Emergency Room Wait Times</h1>
-        <p></p>
-        <h2>Average wait times {currentHospital !== 'aggregate' ? `for ${currentHospital}`: 'across Alberta'}</h2>
+        <header className="App-header">
+          <h1 className="App-title">Alberta Emergency Room Wait Times</h1>
+        </header>
+        <h2>Wait times {isAggregate ? `for ${currentHospital}`: 'across the region'}</h2>
         <HospitalSelect fetchHospitalData={this._fetchHospitalData}/>
+        {!isAggregate && <p>Current wait time: {hospitalData.logs[hospitalData.logs.length - 1].waitTime}</p>}
         <LineGraph hospitalData={this.state.hospitalData}/>
-        <h3>Hourly breakdown</h3>
+        <br/>
         <HeatMap hospitalData={this.state.hospitalData}/>
       </div>
     );

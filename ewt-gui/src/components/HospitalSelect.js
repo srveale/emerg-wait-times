@@ -13,6 +13,7 @@ class HospitalSelect extends Component {
       <div className="hospital-select">
         <label htmlFor="#mainselection">Select a hospital: </label>
         <select id="mainselection" onChange={(e) => this.props.fetchHospitalData(e.target.value)}>
+          <option value='aggregate'>All Alberta</option>
           {HOSPITALS.map(hospital => {
             return (
               <option

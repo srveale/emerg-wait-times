@@ -146,6 +146,7 @@ export default class App extends Component {
     return (
       <div>
         <h3>Daily Breakdown</h3>
+        <p className="chart-subheader">average wait time in minutes for a given time of day</p>
         <svg width="960" height="500"></svg>
       </div>
     );

@@ -155,8 +155,12 @@ class HeatMap extends Component {
 
   render() {
     return (
-      <div width="960" height="500" id="heatmap">
-        <div className="legend"></div>
+      <div>
+        <h3>Hourly breakdown</h3>
+        <p className="chart-subheader">average wait time for a given hour in the week</p>
+        <div width="960" height="500" id="heatmap">
+          <div className="legend"></div>
+        </div>
       </div>
     );
   }
